@@ -6,20 +6,22 @@ OCCUPIED = '#'
 
 class EvqnaSubmission(SubmissionPy):
 
-    def adjacent_seats(self, x, y, floor):
+    def adjacent_seats(self, floor, x, y, W, H):
         deltas = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
         seats = []
         for d_x, d_y in deltas:
             x2, y2 = x + d_x, y + d_y
-            if 0 <= y2 < len(floor) and 0 <= x2 < len(floor[y2]):
+            if 0 <= y2 < H and 0 <= x2 < W and floor[y2][x2] != FLOOR:
                 seats.append((x2, y2))
         return seats
     
     def precompute_lookups(self, floor):
         seat_lookup = {}
-        for y in range(len(floor)):
-            for x in range(len(floor[y])):
-                seat_lookup[(x,y)] = self.adjacent_seats(x, y, floor)
+        W, H = len(floor[0]), len(floor)
+        for y, row in enumerate(floor):
+            for x, seat in enumerate(row):
+                if seat != FLOOR:
+                    seat_lookup[(x,y)] = self.adjacent_seats(floor, x, y, W, H)
         return seat_lookup
     
     def next_state(self, state, seat_lookup):
@@ -40,12 +42,7 @@ class EvqnaSubmission(SubmissionPy):
         return new_state, not changes
     
     def count_occupied(self, state):
-        count = 0
-        for row in state:
-            for c in row:
-                if c == OCCUPIED:
-                    count += 1
-        return count
+        return sum(1 for row in state for c in row if c == OCCUPIED)
 
     def run(self, s):
         floor = s.splitlines()
