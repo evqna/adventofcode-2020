@@ -6,7 +6,7 @@ class EvqnaSubmission(SubmissionPy):
     def all_yes(self, group):
         answered_by_all = set('abcdefghijklmnopqrstuvwxyz')
         for member in group:
-            answered_by_all.intersection_update(set(member))
+            answered_by_all.intersection_update(member)
         return len(answered_by_all)
 
     def run(self, s):

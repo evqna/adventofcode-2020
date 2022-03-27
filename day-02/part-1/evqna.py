@@ -5,10 +5,8 @@ class EvqnaSubmission(SubmissionPy):
 
     def is_valid(self, password_entry):
         policy, c, pwd = password_entry.split()
-        c = c[0]
-        c_min, c_max = map(int, policy.split('-'))
-        pwd_set = ''.join(sorted(pwd))
-        return c * c_min in pwd_set and c * (c_max + 1) not in pwd_set
+        policy_min, policy_max = policy.split('-')
+        return int(policy_min) <= pwd.count(c[0]) <= int(policy_max)
 
-    def run(self, s):
-        return sum(1 for entry in s.splitlines() if self.is_valid(entry))
+    def run(self, input):
+        return sum(1 for entry in input.splitlines() if self.is_valid(entry))
